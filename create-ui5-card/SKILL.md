@@ -11,12 +11,21 @@ Generate SAP UI5 Integration Card `manifest.json` files directly from a user's d
 
 The workflow is intentionally minimal: the user describes what they want, you generate the manifest, they iterate.
 
-1. **User describes the card** — what data, what layout, what purpose
-2. **You generate `manifest.json`** — complete, valid, ready to use
-3. **You run validation** — execute the bundled validation script
-4. **Iterate** — user refines, you regenerate
+1. **Check for available data** — look in the `.data/` folder in the project root
+2. **User describes the card** — what data, what layout, what purpose
+3. **You generate `manifest.json`** — complete, valid, ready to use
+4. **You run validation** — execute the bundled validation script
+5. **Iterate** — user refines, you regenerate
 
 If the user gives enough context upfront (card type, data source, fields), skip straight to generation. Only ask clarifying questions when genuinely ambiguous — for example, if the user says "show my sales data" but hasn't indicated whether they want a list, table, or chart.
+
+## Data Discovery
+
+Before generating a card, **always check for a `.data/` folder** in the project root directory. This folder contains available data sources (JSON files, API response samples, OData metadata) that should inform the card's data binding.
+
+- If `.data/` exists with **one data source** — use it automatically, inform the user which data you're using
+- If `.data/` exists with **multiple data sources** — ask the user which one to use (present the file names as options)
+- If `.data/` does **not exist** or is empty — proceed normally, ask the user about their data or generate sample data
 
 ## Output Location
 
