@@ -11,8 +11,7 @@ Generate SAP UI5 Integration Card `manifest.json` files. Supports List, Table, O
 ## Installation
 
 ```bash
-npx skills add ddushev/claude-skills@create-ui5-card -y
-mkdir -p .claude/skills && mv .agents/skills/create-ui5-card .claude/skills/ && rm -rf .agents
+npx skills add ddushev/claude-skills@create-ui5-card -y && mkdir -p .claude/skills && mv .agents/skills/create-ui5-card .claude/skills/ && rm -rf .agents
 ```
 
 After installation, Claude Code will automatically trigger the skill when you ask to create a UI5 card.
