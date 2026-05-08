@@ -63,6 +63,9 @@ Correct binding syntax is the difference between a working card and a blank one.
 - Inside content items (where `data.path` is set), use **relative** paths: `{name}` not `{/items/0/name}`
 - In expression bindings, reference fields with `${path}` not `{path}`
 - String literals in expressions use **single quotes**: `'text'` (JSON uses double quotes)
+- **No JavaScript function calls** in expressions — no `Math.*`, `parseInt()`, `.substring()`, etc.
+- **No formatters** — do not use `format.*` or any custom/built-in formatter functions
+- Only allowed expression operators: comparison (`===`, `>`, `<`), logical (`&&`, `||`, `!`), arithmetic (`+`, `-`, `*`, `/`, `%`), ternary (`? :`), string concatenation (`+`)
 - URL templates use `{{destinations.x}}` / `{{parameters.x}}` — these are NOT data bindings
 - Header bindings against card-level data use **absolute** paths: `{/headerField}`
 
@@ -171,7 +174,7 @@ When generating a manifest:
 
 1. **Use realistic sample data** — not empty placeholders. If the user mentions "purchase orders," generate 3-5 realistic PO entries with plausible values.
 
-2. **Match binding paths to data** — if the JSON has `{ "name": "Notebook" }`, bind as `"{name}"` not `"{/items/0/name}"`. Read `references/binding-syntax.md` for expression binding syntax when you need conditional values, computed fields, or state mappings.
+2. **Match binding paths to data** — if the JSON has `{ "name": "Notebook" }`, bind as `"{name}"` not `"{/items/0/name}"`. Read `references/binding-syntax.md` for expression binding syntax when you need conditional values or computed fields. **Never use formatters or JavaScript functions** in expressions.
 
 3. **Include both header and content** — a card without a header title looks broken. Always set at least `title` in the header.
 

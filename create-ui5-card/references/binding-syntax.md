@@ -11,7 +11,7 @@ This is the most critical part of card generation. Incorrect bindings cause card
 | Simple property | `{path}` | `"{name}"` | Bind to a single data field |
 | Absolute path | `{/path/to/field}` | `"{/header/title}"` | Bind to a field from the root of the data model |
 | Relative path | `{field}` | `"{name}"` | Bind within a data context (e.g., inside content with `data.path`) |
-| Expression | `{= expression}` | `"{= ${price} > 100 ? 'Expensive' : 'Affordable'}"` | Computed values, conditionals, formatting |
+| Expression | `{= expression}` | `"{= ${price} > 100 ? 'Expensive' : 'Affordable'}"` | Computed values, conditionals |
 | i18n (translation) | `{i18n>KEY}` or `{{KEY}}` | `"{i18n>cardTitle}"` | Translatable texts from i18n.properties |
 | Composite | Multiple parts | `"{firstName} {lastName}"` | Combine multiple bindings in one string |
 
@@ -70,7 +70,7 @@ Inside the expression, reference data fields with `${path}`:
 "{= ${price} > 1000 ? 'Premium' : 'Standard'}"
 ```
 
-### Supported Operators
+### Supported Operators (ONLY these are allowed)
 
 | Category | Operators |
 |----------|-----------|
@@ -79,7 +79,12 @@ Inside the expression, reference data fields with `${path}`:
 | Arithmetic | `+`, `-`, `*`, `/`, `%` |
 | Ternary | `condition ? valueIfTrue : valueIfFalse` |
 | String | `+` (concatenation) |
-| Type check | `typeof` |
+
+**NOT allowed in expression bindings:**
+- No JavaScript function calls (`Math.round()`, `parseInt()`, `parseFloat()`, `.substring()`, `.toFixed()`, etc.)
+- No formatters (no `format.*`, no custom formatters)
+- No `typeof` operator
+- No method calls on values
 
 ### Examples
 
@@ -107,7 +112,7 @@ Inside the expression, reference data fields with `${path}`:
 "title": "{= ${firstName} + ' ' + ${lastName}}"
 ```
 
-**Number formatting:**
+**String concatenation with data fields:**
 ```json
 "description": "{= ${amount} + ' ' + ${currency}}"
 ```
@@ -119,7 +124,7 @@ Inside the expression, reference data fields with `${path}`:
 
 **Percentage calculation:**
 ```json
-"description": "{= Math.round(${actual} / ${target} * 100) + '%'}"
+"description": "{= ${actual} / ${target} * 100 + '%'}"
 ```
 
 ### Expression Binding Rules
@@ -127,9 +132,11 @@ Inside the expression, reference data fields with `${path}`:
 1. **Always use `${path}` for field references** inside expressions — not `{path}`
 2. **String literals** use single quotes: `'text'` (double quotes conflict with JSON)
 3. **Nested ternaries** are valid but keep them readable (max 2 levels deep)
-4. **No function calls** except built-in JavaScript: `Math.round()`, `Math.floor()`, `parseInt()`, `parseFloat()`, `encodeURIComponent()`
-5. **No variable declarations** — expressions must be single-expression, no statements
-6. **Absolute paths** in expressions: `${/root/field}` (with leading slash)
+4. **No function calls** — no `Math.*`, no `parseInt()`, no `.substring()`, no method calls whatsoever
+5. **No formatters** — do not use `format.*` or any custom formatter functions
+6. **No variable declarations** — expressions must be single-expression, no statements
+7. **Absolute paths** in expressions: `${/root/field}` (with leading slash)
+8. **Only use operators from the allowed list above** — comparison, logical, arithmetic, ternary, and string concatenation
 
 ### Common Patterns
 
@@ -141,11 +148,6 @@ Inside the expression, reference data fields with `${path}`:
 **Show/hide based on condition:**
 ```json
 "visible": "{= ${role} === 'Admin' || ${role} === 'Manager'}"
-```
-
-**Format date (simple):**
-```json
-"description": "{= ${date}.substring(0, 10)}"
 ```
 
 **Null-safe access:**
