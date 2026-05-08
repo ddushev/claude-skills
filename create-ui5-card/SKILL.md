@@ -27,6 +27,19 @@ Before generating a card, **always check for a `.data/` folder** in the project 
 - If `.data/` exists with **multiple data sources** — ask the user which one to use (present the file names as options)
 - If `.data/` does **not exist** or is empty — proceed normally, ask the user about their data or generate sample data
 
+### Binding to Real Data Fields
+
+When using data from `.data/`, you **MUST only bind to fields that actually exist** in the data. Do not invent, guess, or assume field names.
+
+1. **Read the data file** and inspect the actual field names in the JSON objects
+2. **List the available fields** before deciding which to bind
+3. **Only use field names that appear in the data** — if a field doesn't exist, don't bind to it
+4. **If the user requests a field that doesn't exist** in the data, tell them it's not available and suggest the closest matching field or ask them to clarify
+
+For example, if the data contains `{ "ProductName": "Laptop", "UnitPrice": 999 }`:
+- Correct: `"{ProductName}"`, `"{UnitPrice}"`
+- Wrong: `"{name}"`, `"{price}"`, `"{title}"` (these don't exist in the data)
+
 ## Output Location
 
 Write the `manifest.json` directly in the **current working directory** — do not create a subfolder.
@@ -174,7 +187,7 @@ When generating a manifest:
 
 1. **Use realistic sample data** — not empty placeholders. If the user mentions "purchase orders," generate 3-5 realistic PO entries with plausible values.
 
-2. **Match binding paths to data** — if the JSON has `{ "name": "Notebook" }`, bind as `"{name}"` not `"{/items/0/name}"`. Read `references/binding-syntax.md` for expression binding syntax when you need conditional values or computed fields. **Never use formatters or JavaScript functions** in expressions.
+2. **Match binding paths to actual data fields** — read the data source first and only use field names that exist. If the JSON has `{ "ProductName": "Notebook" }`, bind as `"{ProductName}"` — never invent fields like `"{name}"` or `"{title}"` that don't exist in the data. Read `references/binding-syntax.md` for expression binding syntax when you need conditional values or computed fields. **Never use formatters or JavaScript functions** in expressions.
 
 3. **Include both header and content** — a card without a header title looks broken. Always set at least `title` in the header.
 
