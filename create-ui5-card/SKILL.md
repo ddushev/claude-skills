@@ -29,13 +29,10 @@ Before generating a card, **always check for a `.data/` folder** in the project 
 
 ## Output Location
 
-Write the manifest to the **current working directory** unless the user specifies a different path:
+Write the `manifest.json` directly in the **current working directory** — do not create a subfolder.
 
-```
-<current-dir>/<card-name>/manifest.json
-```
-
-Use a slug derived from the card's purpose as the folder name (e.g., `purchase-orders-card/`, `sales-kpis/`).
+- If a `manifest.json` **already exists** in the current directory — ask the user for permission before modifying it. Explain what changes you'd make and confirm before overwriting.
+- If no `manifest.json` exists — create it in the current directory.
 
 ## Card Types
 
